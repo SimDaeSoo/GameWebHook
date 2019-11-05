@@ -48,6 +48,15 @@ export default class WebHookController {
         await exec.spawnSync('sh', ['shell/SocketReload.sh'], { stdio: 'inherit' });
     }
 
+    public async kakao(request: Request): Promise<void> {
+        if (this.getBranchType(request) !== BRANCH_TYPE.MASTER) return;
+        await SlackBot.sendMessage(GitHook.log(request));
+        await SlackBot.sendMessage(GitHook.buildStart(request));
+        await exec.spawnSync('sh', ['shell/KakaoBuild.sh'], { stdio: 'inherit' });
+        await SlackBot.sendMessage(GitHook.buildEnd(request));
+        await exec.spawnSync('sh', ['shell/KakaoReload.sh'], { stdio: 'inherit' });
+    }
+
     private getBranchType(request: Request): BRANCH_TYPE {
         const payload: any = JSON.parse(request.body.payload);
         console.log(request.body.payload);

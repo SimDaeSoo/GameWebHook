@@ -14,6 +14,13 @@ export default class WebHookAPI {
         this.router.post('/front', this.front);
         this.router.post('/back', this.back);
         this.router.post('/socket', this.socket);
+        this.router.post('/kakao', this.kakao);
+    }
+
+    private async kakao(request: Request, response: Response, next: NextFunction): Promise<void> {
+        const webHookController = new WebHookController();
+        webHookController.kakao(request);
+        response.send();
     }
 
     private async hook(request: Request, response: Response, next: NextFunction): Promise<void> {
